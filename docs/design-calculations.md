@@ -58,7 +58,7 @@ To maintain mathematical clarity across multiple stages, variables are named usi
 ## Math Calculations
 ### Stage 1: Power Input & Input Filter
 #### Middlebrook Criteria Confirmation
-To meet the Middlebrook criteria, input impedance of the load must be at least 10x greater than output impedance of the source. To account for worst case scenario, at lowest input impedance, minimum value of input voltage ($\rm V_{IN}$) is used.
+To meet the Middlebrook criteria, input impedance of the converter must be at least 10x greater than output impedance of the source. To account for worst-case scenario, at lowest input impedance, minimum value of input voltage ($\rm V_{IN}$) is used.
 
 $$
 \begin{aligned}
@@ -82,8 +82,7 @@ $$
   & = 48.53 + 2.94 \\
   \newline
   & = \rm 51.47\ W \\
-\newline
-\newline
+\rule{0pt}{10pt} \\
 \rm Z_{IN} & = \rm \frac{V_{IN}^2}{P_{IN}}\ [\Omega] \\
   & = \frac{18^2}{51.47} \\
   \newline
@@ -119,3 +118,73 @@ $$
 #### Input MOSFET Heat Dissipation [TBD]
 
 *Note: Some of the components are To Be Determined [TBD] based on availability and final layout space constraints.*
+
+### Stage 2A: Main Adjustable Power Rail (Buck Converter & LDO)
+#### Timer Resistor ($\rm R_{T(1)}$) 
+The switching frequency of the main buck regulator is set to 435 kHz via the $R_{T}$ pin resistor; this enables sufficient separation from the adapter's lower switching frequency ($\approx 100\rm\ kHz$) to minimize beat frequency noise, while preventing excessive switching losses at higher frequencies.
+
+$$
+\begin{align*}
+\rm R_{T(1)} & = \frac{5.2\cdot 10^9}{\rm f_{SW(1)}} - 948\ [\Omega] \\
+  & = \frac{5.2\cdot 10^9}{435\rm\ kHz} - 948 \\
+  \newline
+  & \approx 11\rm\ k\Omega
+\end{align*}
+$$
+  
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm R_{T(1)} =\ 11\rm\ k\Omega
+\end{align*}
+}
+$$
+
+#### Output Inductor ($\rm L_{O(1)}$)
+The output inductance is calculated using a nominal mid-range voltage of $\rm V_{OUT} = 8\rm\ V$ to achieve a balanced ripple current trade-off over the full output voltage range. Also, maximum inductor ripple ($\rm I_{PP(1)}$) current is selected as 20% of the full load current.
+
+$$
+\begin{align*}
+\rm L_{O(1)} & = \frac{\rm V_{OUT}}{\rm I_{PP(1)}\cdot \rm f_{SW(1)}}\cdot \left(1 - \frac{\rm V_{OUT}}{\rm V_{IN}}\right)\ [\rm H] \\
+  & = \frac{8\rm\ V}{2.75\rm\ A \cdot 0.2 \cdot 435\rm\ kHz}\cdot \left(1 - \frac{8\rm\ V}{20\rm\ V} \right) \\
+  \newline
+  & \approx 20.07\rm\ \textmu H
+\end{align*}
+$$
+  
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm L_{O(1)} =\ 20\rm\ \textmu H
+\end{align*}
+}
+$$
+
+#### Current Sense Resistor ($\rm R_{S(1)}$)
+Maximum output current capability ($\rm I_{OUT(MAX)}$) is selected 150% of the full load current to account for tolerances.
+
+$$
+\begin{align*}
+\rm R_{S(1)}  & = \frac{\rm V_{CS(TH)(1)}}{\rm I_{OUT(MAX)} + \left(\dfrac{\rm V_{OUT}\cdot \rm K}{\rm f_{SW(1)}\cdot \rm L_{O(1)}}\right) - \left(\dfrac{\rm I_{PP(1)}}{2}\right)}\ [\Omega] \\ 
+  & = \frac{0.12\rm\ V}{2.75\rm\ A \cdot 1.5 + \left(\dfrac{8\rm\ V\cdot 1}{435\rm\ kHz\cdot 20\rm\ \textmu H}\right) - \left(\dfrac{0.55\rm\ A}{2}\right)} \\
+  \newline
+  & \approx 25.13\rm\ m\Omega \\
+\rule{0pt}{50pt} \\
+\rm P_{RS(1)} & = \left(1 - \frac{\rm V_{OUT}}{\mathrm{V_{IN}}}\right)\cdot (\rm I_{OUT})^2\cdot \rm R_{S(1)}\ [\rm W] \\
+  & = \left(1 - \frac{8\rm\ V}{20\rm\ V}\right)\cdot (2.75\rm\ A)^2\cdot 25\rm\ m\Omega \\
+  \newline
+  & \approx 0.11\rm\ W
+\end{align*}
+$$
+
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm R_{S(1)} = 25\rm\ m\Omega\ \\
+  &\diamond \rm P_{RS(1)} = [TBD]
+\end{align*}
+}
+$$
