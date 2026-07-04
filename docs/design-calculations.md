@@ -55,10 +55,12 @@ To maintain mathematical clarity across multiple stages, variables are named usi
 | V<sub>IN(3)</sub> | Input Voltage | — | 5.0 | — | V | Equal to V<sub>OUT(2)</sub> |
 | V<sub>OUT(3)</sub> | Output Voltage | — | 3.3 | — | V | Separate Rails for Analog and Digital |
 
+*Note: Some of the components are To Be Determined [TBD] based on availability and final layout space constraints.*
+
 ## Math Calculations
 ### Stage 1: Power Input & Input Filter
 #### Middlebrook Criteria Confirmation
-To meet the Middlebrook criteria, input impedance of the converter must be at least 10x greater than output impedance of the source. To account for worst-case scenario, at lowest input impedance, minimum value of input voltage ($\rm V_{IN}$) is used.
+To meet the Middlebrook criteria, input impedance of the converter must be at least 10x greater than output impedance of the source. To account for worst-case scenario, at lowest input impedance, minimum value of input voltage ($\rm V_{IN}$) was used.
 
 $$
 \begin{aligned}
@@ -90,7 +92,7 @@ $$
 \end{aligned}
 $$
 
-For $\rm Z_{IN} \geq 10 \cdot Z_{OUT(FILTER)}$ to be true, output impedance of the source ($\rm Z_{OUT(FILTER)}$) must be less than $0.67\ \rm \Omega$. ($\rm L_{IN}$ is selected as standard value of 6.8 $\rm \upmu H$.)
+For $\rm Z_{IN} \geq 10 \cdot Z_{OUT(FILTER)}$ to be true, output impedance of the source ($\rm Z_{OUT(FILTER)}$) must be less than $0.67\ \rm \Omega$. ($\rm L_{IN}$ was selected as standard value of 6.8 $\rm \upmu H$.)
 
 $$
 \begin{aligned}
@@ -104,7 +106,7 @@ $$
 #### Cut-off Frequency Confirmation
 To reduce noise coupling at the input node, the cutoff frequency of the low-pass filter should be at least 10x lower than the switching frequency. 
 
-For a conservative baseline, the nominal adapter switching frequency ($\rm f_{SW} \approx \rm 100 kHz$) is considered. Although adapters typically have relatively low output ripple, designing with a sufficiently low cut-off frequency increases attenuation of input ripple and suppress noise coupling between the other switching regulators connected to that node.
+For a conservative baseline, the nominal adapter switching frequency ($\rm f_{SW} \approx \rm 100 kHz$) was considered. Although adapters typically have relatively low output ripple, designing with a sufficiently low cut-off frequency increases attenuation of input ripple and suppress noise coupling between the other switching regulators connected to that node.
 
 $$
 \begin{aligned}
@@ -115,13 +117,12 @@ $$
 \end{aligned}
 $$
 
-#### Input MOSFET Heat Dissipation [TBD]
-
-*Note: Some of the components are To Be Determined [TBD] based on availability and final layout space constraints.*
+#### Input MOSFET Heat Dissipation
+[TBD]
 
 ### Stage 2A: Main Adjustable Power Rail (Buck Converter & LDO)
 #### Timer Resistor ($\rm R_{T(1)}$) 
-The switching frequency of the main buck regulator is set to 435 kHz via the $R_{T}$ pin resistor; this enables sufficient separation from the adapter's lower switching frequency ($\approx 100\rm\ kHz$) to minimize beat frequency noise, while preventing excessive switching losses at higher frequencies.
+The switching frequency of the main buck regulator was set to 435 kHz via the $R_{T}$ pin resistor; this enables sufficient separation from the adapter's lower switching frequency ($\approx 100\rm\ kHz$) to minimize beat frequency noise, while preventing excessive switching losses at higher frequencies.
 
 $$
 \begin{align*}
@@ -142,7 +143,7 @@ $$
 $$
 
 #### Output Inductor ($\rm L_{O(1)}$)
-The output inductance is calculated using a nominal mid-range voltage of $\rm V_{OUT} = 8\rm\ V$ to achieve a balanced ripple current trade-off over the full output voltage range. Also, maximum inductor ripple ($\rm I_{PP(1)}$) current is selected as 20% of the full load current.
+The output inductance was calculated using a nominal mid-range voltage of $\rm V_{OUT} = 8\rm\ V$ to achieve a balanced ripple current trade-off over the full output voltage range. In addition, maximum inductor ripple ($\rm I_{PP(1)}$) current was selected as 20% of the full load current.
 
 $$
 \begin{align*}
@@ -163,7 +164,7 @@ $$
 $$
 
 #### Current Sense Resistor ($\rm R_{S(1)}$)
-Maximum output current capability ($\rm I_{OUT(MAX)}$) is selected 150% of the full load current to account for tolerances.
+Maximum output current capability ($\rm I_{OUT(MAX)}$) was selected 150% of the full load current to account for tolerances.
 
 $$
 \begin{align*}
@@ -188,3 +189,29 @@ $$
 \end{align*}
 }
 $$
+
+$\circ$ ***Note:*** Since the LM25117 uses an emulated current ramp, it samples the valley current just before the high-side switch turns on. This means the controller is unaffected by the large leading-edge switching spikes. Therefore, a current sense filter was not used in this design to avoid propagation delay on current sensing.
+
+#### Ramp Resistor and Capacitor ($\rm R_{RAMP(1)}$ and $\rm C_{RAMP(1)}$)
+Current sense amplifier gain ($\rm A_{S(1)}$) and K factor ($\rm K_{(1)}$) are both defined in the datasheet. K factor was set to 1, as datasheet suggested, to prevent sub-harmonic oscillations and ensure one-cycle damping.
+
+$$
+\begin{align*}
+\rm R_{RAMP(1)} & = \frac{\rm L_{O(1)}}{\rm K_{(1)}\cdot \rm C_{RAMP(1)}\cdot \rm R_{S(1)}\cdot \rm A_{S(1)}}\ [\Omega] \\
+  & = \frac{20\rm\ \textmu H}{1\cdot 1\rm\ nF\cdot 25\rm\ m\Omega\cdot 10} \\
+  \newline
+  & = 80\rm\ k\Omega
+\end{align*}
+$$
+
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm C_{RAMP(1)} =\ 1\rm\ nF \\
+  &\diamond \rm R_{RAMP(1)} =\ 82\rm\ k\Omega
+\end{align*}
+}
+$$
+
+$\circ$ ***Note:*** The value of $\rm C_{RAMP(1)}$ was set to the standard capacitor value of 1 nF.
