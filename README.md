@@ -22,7 +22,7 @@ While university courses mostly provided hypothetical ideal circuits, this proje
 - Temperature-controlled fan.
 - NPN-based active current sink at the output rail to maintain LDO stability under zero-load or light-load conditions.
 ### Output
-- Digitally adjustable output (1.2–15 V, up to 2.75 A) with custom constant current (CC) mode.
+- Digitally adjustable output (1.2–15 V, up to 2.75 A).
 - LDO output with buck controller as a pre-regulator.
 - Multi-stage filtering.
 - OLED display module.
@@ -35,6 +35,46 @@ While university courses mostly provided hypothetical ideal circuits, this proje
 
 ## Hardware Architecture Overview
 This section provides a simplified blueprint of the system architecture, focusing on the core operating principles and critical design blocks without getting into mathematical formulas or component details.
+
+```mermaid
+flowchart LR
+  subgraph INPUT_STAGE [Input & Protection]
+    IN[Power Adapter] --> PROT[Reverse Prot] --> PI1[Pi-filter]
+  end
+
+  subgraph MAIN_RAIL [Main Power Rail]
+    PI1 --> BUCK_ADJ[Adjustable Buck]
+    BUCK_ADJ --> PI2[Pi-filter] --> SHUNT[Shunt Resistor] --> LDO_ADJ[Adjustable LDO] --> OUT((LOAD))
+  end
+
+  subgraph AUX_RAILS [Auxiliary Rails]
+    PI1 --> BUCK_5V[5V Buck]
+    BUCK_5V --> PI3[Pi-filter] --> LDO_3V3_D[3V3 Digital]
+    BUCK_5V --> PI4[Pi-filter] --> LDO_3V3_A[3V3 Analog]
+  end
+
+  subgraph CONTROL [Control & Feedback]
+    MCU[MCU]
+    AMP[Current Amp]
+    DISP[OLED]
+    FAN[Fan]
+  end
+
+  LDO_3V3_D --> MCU
+  LDO_3V3_A --> AMP
+  BUCK_5V --> DISP
+  BUCK_5V --> FAN
+
+  MCU -.->|V-Set| LDO_ADJ
+  MCU -.->|I-Limit| BUCK_ADJ
+  MCU -.->|PWM| FAN
+  MCU -.->|SPI| DISP
+    
+  SHUNT -.-> AMP
+  AMP -.-> MCU
+    
+  LDO_ADJ -.->|Pre-reg FB| BUCK_ADJ
+```
 
 ### Stage 1: Power Input & Input Filtering
 * **Input Pre-Filtering:** For this design, it was assumed that standard laptop adapters operate around ~100 kHz switching frequency. To minimize this input noise, a CLC Pi-filter is placed immediately after the input.
@@ -49,7 +89,7 @@ This section provides a simplified blueprint of the system architecture, focusin
 ### Stage 2A: Main Adjustable Power Rail (Buck Converter & LDO)
 * **Pre-Regulation:** To achieve stable and low-noise output, an LDO is used. However, since possible high output current may cause an impractical amount of power dissipation, a buck pre-regulator is implemented to maintain a minimal and constant dropout voltage.
 
-* **CC & CV Modes:** While the Constant Current (CC) and Constant Voltage (CV) limits are digitally set by the MCU, relying solely on software poses a reliability risk in high-noise power environments. Therefore, a hardware resistor network restricts the maximum voltage the feedback circuit can receive, preventing the V-set signal from exceeding safe operational thresholds.
+* **CC & CV Modes:** While the Constant Current (CC) and Constant Voltage (CV) limits are digitally set by the MCU, relying solely on software poses a reliability risk in high-noise power environments. Therefore, a hardware resistor network restricts the maximum voltage the feedback circuit can receive, preventing both V-set and I-limit signals from exceeding safe operational thresholds.
   
 * **Current and Voltage Sensing:** The output current is measured using a shunt resistor paired with a current sense amplifier. The output voltage is sampled via a dedicated voltage divider connected to the LDO output rail. Both analog signals are then processed by the MCU's ADC and displayed on the OLED screen.
 
