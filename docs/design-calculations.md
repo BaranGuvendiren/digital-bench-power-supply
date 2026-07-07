@@ -26,33 +26,47 @@ To maintain mathematical clarity across multiple stages, variables are named usi
 ### Board Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| V<sub>IN</sub> | Input Voltage | 18.0 | 19.0 | 20.0 | V | Standard Laptop DC Power Adapter |
-| V<sub>OUT</sub> | Adjustable Output Voltage | 1.25 | — | 15.0 | V | User/Load Dependent |
-| f<sub>SW</sub> | Input Switching Frequency | 60 | 100 | 140 | kHz | Estimated Adapter Switching Frequency |
-| P<sub>IN</sub> | Total Input Power | — | — | 51.47 | W | Combined Worst-Case Input Power |
-| I<sub>IN</sub> | Input Current | — | — | 2.86 | A | Max Current Drawn from Adapter |
-| I<sub>OUT</sub> | Output Load Current | — | — | 2.75 | A | Hardware Current Limit Boundary |
+| V<sub>IN</sub> | Input Voltage | 18.4 | 19.0 | 20.4 | V | Standard 19 V/20 V Laptop DC Power Adapter |
+| V<sub>OUT</sub> | Adjustable Output Voltage | 1.25 | — | 14.0 | V | User/Load Dependent |
+| f<sub>SW</sub> | Adapter Switching Frequency | 60 | 100 | 140 | kHz | Estimated Adapter Switching Frequency |
+| P<sub>IN</sub> | Total Input Power | — | — | 54.08 | W | Combined Worst-Case Input Power |
+| I<sub>IN</sub> | Input Current | — | — | 2.94 | A | Max Current Drawn from Adapter |
+| I<sub>OUT</sub> | Output Load Current | — | — | 2.75 | A | Hardware Current Limit |
 | C<sub>IN(EQ)</sub> | Equivalent Filter Capacitance | — | 120 | — | μF | Calculated Equivalent Input Capacitance |
 | L<sub>IN</sub> | Input Filter Inductance | — | 6.8 | — | μH | Selected Power Inductor |
 
 ### IC-1 LM25117 Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| η<sub>(1)</sub> | Output Efficiency | 85 | 90 | 95 | % | Estimated Efficiency Range |
-| f<sub>SW(1)</sub> | Switching Frequency | — | 435 | — | kHz | Set Switching Frequency |
+| η<sub>(1)</sub> | Output Efficiency | 78 | 80 | 82 | % | Estimated Efficiency Range |
+| V<sub>OUT</sub> | Adjustable Output Voltage | 1.65 | — | 14.4 | V | User/Load Dependent |
+| I<sub>OUT(1)</sub> | Output Load Current | — | — | 2.75 | A | Hardware Current Limit Boundary |
+| f<sub>SW(1)</sub> | Switching Frequency | — | 435 | — | kHz | Desired Switching Frequency |
+| R<sub>T(1)</sub> | Timer Resistor | — | 82 | — | kΩ | [See Calculations](#timer-resistor-rm-r_t1) |
+| L<sub>O</sub> | Output Inductor | — | 20 | — | μH | [See Calculations](#output-inductor-rm-l_o1) |
+| R<sub>S(1)</sub> | Current Sense Resistor | — | 25 | — | mΩ | [See Calculations](#current-sense-resistor-rm-r_s1) |
+| R<sub>RAMP(1)</sub> | Ramp Resistor | — | 82 | — | kΩ | [See Calculations](#ramp-resistor-and-capacitor-rm-r_ramp1-and-rm-c_ramp1) |
+| C<sub>RAMP(1)</sub> | Ramp Capacitor | — | 1 | — | nF | Selected Standard Capacitor Value |
+| R<sub>UV2(1)</sub> | UVLO Resistor 1 | — | 50 | — | kΩ | [See Calculations](#uvlo-divider-rm-r_uv11-and-rm-r_uv21) |
+| R<sub>UV1(1)</sub> | UVLO Resistor 2 | — | 3.9 | — | kΩ | [See Calculations](#uvlo-divider-rm-r_uv11-and-rm-r_uv21) |
+| C<sub>FT(1)</sub> | UVLO Filter Capacitor | — | 100 | — | pF | Selected Standard Capacitor Value |
+| C<sub>SS(1)</sub> | Soft-Start Capacitor | — | 120 | — | nF | [See Calculations](#soft-start-capacitor-rm-c_ss1) |
+| C<sub>RES(1)</sub> | Restart Capacitor | — | 1 | — | μF | [See Calculations](#restart-capacitor-rm-c_res1) |
+| R<sub>FB1(1)</sub> | Output Voltage Divider Resistor 1 | — | TBD | — | kΩ | [See Calculations](#output-voltage-divider-rm-r_fb21-and-rm-r_fb11) |
+| R<sub>FB2(1)</sub> | Output Voltage Divider Resistor 2 | — | TBD | — | kΩ | [See Calculations](#output-voltage-divider-rm-r_fb21-and-rm-r_fb11) |
 
 ### IC-2 TPS54332 Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| V<sub>OUT(2)</sub> | Output Voltage | — | 5.0 | — | V | Supplied by V<sub>IN</sub> |
-| I<sub>OUT(2)</sub> | Output Current | — | 0.5 | — | A | Estimated Max Load |
-| η<sub>(2)</sub> | Output Efficiency | 85 | 90 | 95 | % | Estimated Efficiency Range |
+| V<sub>OUT(2)</sub> | Output Voltage | 4.9 | 5.0 | — | V | Supplied by V<sub>IN</sub> |
+| I<sub>OUT(2)</sub> | Output Current | — | 0.45 | 0.5 | A | Estimated Max Load |
+| η<sub>(2)</sub> | Output Efficiency | 74 | 76 | 78 | % | Estimated Efficiency Range |
 | f<sub>SW(2)</sub> | Switching Frequency | — | 1 | — | MHz | Fixed Switching Frequency |
 
 ### IC-3 LP5907 Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| V<sub>IN(3)</sub> | Input Voltage | — | 5.0 | — | V | Equal to V<sub>OUT(2)</sub> |
+| V<sub>IN(3)</sub> | Input Voltage | 4.9 | 5.0 | — | V | Equal to V<sub>OUT(2)</sub> |
 | V<sub>OUT(3)</sub> | Output Voltage | — | 3.3 | — | V | Separate Rails for Analog and Digital |
 
 *Note: Some of the components are To Be Determined [TBD] based on availability and final layout space constraints.*
@@ -64,35 +78,35 @@ To meet the Middlebrook criteria, input impedance of the converter must be at le
 
 $$
 \begin{aligned}
-\rm P_{IN(1)} & = \rm \frac{ I_{OUT} \cdot V_{OUT}}{\upeta_{(1)}}\ [W] \\
-  & = \frac{2.75 \cdot 15.0}{0.85} \\
+\rm P_{IN(1)} & = \rm \frac{I_{OUT(1)} \cdot V_{OUT(1)}}{\upeta_{(1)}}\ [W] \\
+  & = \frac{2.75 \cdot 14.4}{0.78} \\
   \newline
-  & \approx \rm 48.53\ W
+  & \approx \rm 50.77\ W
 \end{aligned}
 \qquad\qquad
 \begin{aligned}
 \rm P_{IN(2)} & = \rm \frac{ I_{OUT(2)} \cdot V_{OUT(2)}}{\upeta_{(2)}}\ [W] \\
-  & = \frac{0.5 \cdot 5.0}{0.85} \\
+  & = \frac{0.5 \cdot 4.9}{0.74} \\
   \newline
-  & \approx \rm 2.94\ W
+  & \approx \rm 3.31\ W
 \end{aligned}
 $$
 
 $$
 \begin{aligned}
 \rm P_{IN} & = \rm P_{IN(1)} + P_{IN(2)}\ [W] \\
-  & = 48.53 + 2.94 \\
+  & = 50.77 + 3.31 \\
   \newline
-  & = \rm 51.47\ W \\
+  & = \rm 54.08\ W \\
 \rule{0pt}{10pt} \\
 \rm Z_{IN} & = \rm \frac{V_{IN}^2}{P_{IN}}\ [\Omega] \\
-  & = \frac{18^2}{51.47} \\
+  & = \frac{18.4^2}{54.08} \\
   \newline
-  & \approx \rm 6.29\ \Omega
+  & \approx \rm 6.26\ \Omega
 \end{aligned}
 $$
 
-For $\rm Z_{IN} \geq 10 \cdot Z_{OUT(FILTER)}$ to be true, output impedance of the source ($\rm Z_{OUT(FILTER)}$) must be less than $0.67\ \rm \Omega$. ($\rm L_{IN}$ was selected as standard value of 6.8 $\rm \upmu H$.)
+For $\rm Z_{IN} \geq 10 \cdot Z_{OUT(FILTER)}$ to be true, output impedance of the source ($\rm Z_{OUT(FILTER)}$) must be less than $0.62\ \rm \Omega$. ($\rm L_{IN}$ was selected as standard value of 6.8 $\rm \upmu H$.)
 
 $$
 \begin{aligned}
@@ -148,7 +162,7 @@ The output inductance was calculated using a nominal mid-range voltage of $\rm V
 $$
 \begin{align*}
 \rm L_{O(1)} & = \frac{\rm V_{OUT}}{\rm I_{PP(1)}\cdot \rm f_{SW(1)}}\cdot \left(1 - \frac{\rm V_{OUT}}{\rm V_{IN}}\right)\ [\rm H] \\
-  & = \frac{8\rm\ V}{2.75\rm\ A \cdot 0.2 \cdot 435\rm\ kHz}\cdot \left(1 - \frac{8\rm\ V}{20\rm\ V} \right) \\
+  & = \frac{8\rm\ V}{2.75\rm\ A \cdot 0.2 \cdot 435\ kHz}\cdot \left(1 - \frac{8\rm\ V}{20\rm\ V} \right) \\
   \newline
   & \approx 20.07\rm\ \textmu H
 \end{align*}
@@ -168,13 +182,13 @@ Maximum output current capability ($\rm I_{OUT(MAX)}$) was selected 150% of the 
 
 $$
 \begin{align*}
-\rm R_{S(1)}  & = \frac{\rm V_{CS(TH)(1)}}{\rm I_{OUT(MAX)} + \left(\dfrac{\rm V_{OUT}\cdot \rm K}{\rm f_{SW(1)}\cdot \rm L_{O(1)}}\right) - \left(\dfrac{\rm I_{PP(1)}}{2}\right)}\ [\Omega] \\ 
-  & = \frac{0.12\rm\ V}{2.75\rm\ A \cdot 1.5 + \left(\dfrac{8\rm\ V\cdot 1}{435\rm\ kHz\cdot 20\rm\ \textmu H}\right) - \left(\dfrac{0.55\rm\ A}{2}\right)} \\
+\rm R_{S(1)}  & = \frac{\rm V_{CS(TH)(1)}}{\rm I_{OUT(MAX)} + \left(\dfrac{\rm V_{OUT}\cdot \rm K}{\rm f_{SW(1)}\cdot L_{O(1)}}\right) - \left(\dfrac{\rm I_{PP(1)}}{2}\right)}\ [\Omega] \\ 
+  & = \frac{0.12\rm\ V}{2.75\rm\ A \cdot 1.5 + \left(\dfrac{8\rm\ V\cdot 1}{435\rm\ kHz\cdot 20\ \textmu H}\right) - \left(\dfrac{0.55\rm\ A}{2}\right)} \\
   \newline
   & \approx 25.13\rm\ m\Omega \\
 \rule{0pt}{50pt} \\
-\rm P_{RS(1)} & = \left(1 - \frac{\rm V_{OUT}}{\mathrm{V_{IN}}}\right)\cdot (\rm I_{OUT})^2\cdot \rm R_{S(1)}\ [\rm W] \\
-  & = \left(1 - \frac{8\rm\ V}{20\rm\ V}\right)\cdot (2.75\rm\ A)^2\cdot 25\rm\ m\Omega \\
+\rm P_{RS(1)} & = \left(1 - \frac{\rm V_{OUT}}{\rm{V_{IN}}}\right)\cdot (\rm I_{OUT})^2\cdot R_{S(1)}\ [\rm W] \\
+  & = \left(1 - \frac{8\rm\ V}{20\rm\ V}\right)\cdot (2.75\rm\ A)^2\cdot 25\ m\Omega \\
   \newline
   & \approx 0.11\rm\ W
 \end{align*}
@@ -185,7 +199,7 @@ $$
 \begin{align*}
   &\text{Picked Value(s):} \\
   &\diamond \rm R_{S(1)} = 25\rm\ m\Omega\ \\
-  &\diamond \rm P_{RS(1)} = [TBD]
+  &\diamond \rm P_{RS(1)} = [TBD > 0.11W]
 \end{align*}
 }
 $$
@@ -193,12 +207,12 @@ $$
 $\circ$ ***Note:*** Since the LM25117 uses an emulated current ramp, it samples the valley current just before the high-side switch turns on. This means the controller is unaffected by the large leading-edge switching spikes. Therefore, a current sense filter was not used in this design to avoid propagation delay on current sensing.
 
 #### Ramp Resistor and Capacitor ($\rm R_{RAMP(1)}$ and $\rm C_{RAMP(1)}$)
-Current sense amplifier gain ($\rm A_{S(1)}$) and K factor ($\rm K_{(1)}$) are both defined in the datasheet. K factor was set to 1, as datasheet suggested, to prevent sub-harmonic oscillations and ensure one-cycle damping.
+Current sense amplifier gain ($\rm A_{S(1)}$) and K factor ($\rm K_{(1)}$) are both defined in the datasheet. K factor was set to 1 to prevent sub-harmonic oscillations and ensure one-cycle damping, as recommended in the datasheet.
 
 $$
 \begin{align*}
-\rm R_{RAMP(1)} & = \frac{\rm L_{O(1)}}{\rm K_{(1)}\cdot \rm C_{RAMP(1)}\cdot \rm R_{S(1)}\cdot \rm A_{S(1)}}\ [\Omega] \\
-  & = \frac{20\rm\ \textmu H}{1\cdot 1\rm\ nF\cdot 25\rm\ m\Omega\cdot 10} \\
+\rm R_{RAMP(1)} & = \frac{\rm L_{O(1)}}{\rm K_{(1)}\cdot C_{RAMP(1)}\cdot R_{S(1)}\cdot A_{S(1)}}\ [\Omega] \\
+  & = \frac{20\rm\ \textmu H}{1\cdot 1\rm\ nF\cdot 25\ m\Omega\cdot 10} \\
   \newline
   & = 80\rm\ k\Omega
 \end{align*}
@@ -215,3 +229,97 @@ $$
 $$
 
 $\circ$ ***Note:*** The value of $\rm C_{RAMP(1)}$ was set to the standard capacitor value of 1 nF.
+
+#### UVLO Divider ($\rm R_{UV1(1)}$ and $\rm R_{UV2(1)}$)
+The startup threshold (${\rm V_{STARTUP(1)}}$) was set to 17.4 V, with 1 V hysteresis (${\rm V_{HYS(1)}}$) using UVLO pin for undervoltage protection.
+
+$$
+\begin{align*}
+\rm R_{UV2(1)} & = \frac{\rm V_{HYS(1)}}{20\rm\ \textmu A}\ [\Omega] \\
+  & = \frac{1\rm\ V}{20\rm\ \textmu A} \\
+  \newline
+  & = 50\rm\ k\Omega \\
+\rule{0pt}{50pt} \\
+\rm R_{UV1(1)} & = \frac{1.25\rm\ V\cdot R_{UV2(1)}}{\rm V_{STARTUP(1)} - 1.25\ V}\ [\Omega] \\ 
+  & = \frac{1.25\rm\ V\cdot 50\ k\Omega}{17.4\rm\ V - 1.25\ V} \\
+  \newline
+  & \approx 3.87\rm\ k\Omega
+\end{align*}
+$$
+
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm R_{UV2(1)} =\ 50\rm\ k\Omega \\
+  &\diamond \rm R_{UV1(1)} =\ 3.9\rm\ k\Omega \\
+  &\diamond \rm C_{FT(1)}  =\ 100\rm\ pF
+\end{align*}
+}
+$$
+
+#### Soft-Start Capacitor ($\rm C_{SS(1)}$)
+The soft-start time ($\rm t_{SS}$) was selected as 10 ms to mitigate high inrush currents at startup without accidentally activating the IC's protection circuitry.
+
+$$
+\begin{align*}
+\rm C_{SS(1)} & = \frac{\rm t_{SS} \cdot 10\ \textmu A}{0.8\rm\ V}\ [\rm F] \\
+  & = \frac{10\rm\ ms\cdot 10\ \textmu A}{0.8\rm\ V} \\
+  \newline
+  & = 125\rm\ nF
+\end{align*}
+$$
+
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm C_{SS(1)} =\ 120\rm\ nF
+\end{align*}
+}
+$$
+
+#### Restart Capacitor ($\rm C_{RES(1)}$)
+The restart delay ($\rm t_{RES}$) was set to 125 ms to allow sufficient cooling during a continuous fault condition, while keeping the system recovery reasonably fast.
+
+$$
+\begin{align*}
+\rm C_{RES(1)} & = \frac{\rm t_{RES} \cdot 10\ \textmu A}{1.25\rm\ V}\ [\rm F] \\
+  & = \frac{125\rm\ ms\cdot 10\ \textmu A}{1.25\rm\ V} \\
+  \newline
+  & = 1\rm\ uF 
+\end{align*}
+$$
+
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm C_{RES(1)} =\ 1\rm\ uF
+\end{align*}
+}
+$$
+
+#### Output Voltage Divider ($\rm R_{FB2(1)}$ and $\rm R_{FB1(1)}$)
+The feedback divider resistors were configured for the maximum output voltage (${\rm\ V_{OUT(1)}}$) to enable output voltage adjustment using a DAC-based feedback adjustment.
+
+$$
+\begin{align*}
+\frac{\rm R_{FB2(1)}}{\rm R_{FB1(1)}} & = \frac{\rm\ V_{OUT(1)}}{0.8\rm\ V} - 1 \\
+  & = \frac{14.4\rm\ V}{0.8\rm\ V} - 1 \\
+  \newline
+  & = 17 \\
+\rule{0pt}{50pt} \\
+\rm R_{FB2(1)} & = 17\cdot \rm R_{FB1(1)} \\
+\end{align*}
+$$
+
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm R_{FB2(1)} =\ 22.1\rm\ k\Omega \\
+  &\diamond \rm R_{FB1(1)} =\ 1.3\rm\ k\Omega \\
+\end{align*}
+}
+$$
