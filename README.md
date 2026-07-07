@@ -22,7 +22,7 @@ While university courses mostly provided hypothetical ideal circuits, this proje
 - Temperature-controlled fan.
 - NPN-based active current sink at the output rail to maintain LDO stability under zero-load or light-load conditions.
 ### Output
-- Digitally adjustable output (1.2–15 V, up to 2.75 A).
+- Digitally adjustable output (1.2–14 V, up to 2.75 A).
 - LDO output with buck controller as a pre-regulator.
 - Multi-stage filtering.
 - OLED display module.
