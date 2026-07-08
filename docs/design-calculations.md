@@ -164,7 +164,7 @@ $$
 \rm L_{O(1)} & = \frac{\rm V_{OUT}}{\rm I_{PP(1)}\cdot \rm f_{SW(1)}}\cdot \left(1 - \frac{\rm V_{OUT}}{\rm V_{IN}}\right)\ [\rm H] \\
   & = \frac{8\rm\ V}{2.75\rm\ A \cdot 0.2 \cdot 435\ kHz}\cdot \left(1 - \frac{8\rm\ V}{20\rm\ V} \right) \\
   \newline
-  & \approx 20.07\rm\ \textmu H
+  & \approx 20.07\rm\ \upmu H
 \end{align*}
 $$
   
@@ -172,7 +172,7 @@ $$
 \boxed{
 \begin{align*}
   &\text{Picked Value(s):} \\
-  &\diamond \rm L_{O(1)} =\ 20\rm\ \textmu H
+  &\diamond \rm L_{O(1)} =\ 20\rm\ \upmu H
 \end{align*}
 }
 $$
@@ -183,7 +183,7 @@ Maximum output current capability ($\rm I_{OUT(MAX)}$) was selected 150% of the 
 $$
 \begin{align*}
 \rm R_{S(1)}  & = \frac{\rm V_{CS(TH)(1)}}{\rm I_{OUT(MAX)} + \left(\dfrac{\rm V_{OUT}\cdot \rm K}{\rm f_{SW(1)}\cdot L_{O(1)}}\right) - \left(\dfrac{\rm I_{PP(1)}}{2}\right)}\ [\Omega] \\ 
-  & = \frac{0.12\rm\ V}{2.75\rm\ A \cdot 1.5 + \left(\dfrac{8\rm\ V\cdot 1}{435\rm\ kHz\cdot 20\ \textmu H}\right) - \left(\dfrac{0.55\rm\ A}{2}\right)} \\
+  & = \frac{0.12\rm\ V}{2.75\rm\ A \cdot 1.5 + \left(\dfrac{8\rm\ V\cdot 1}{435\rm\ kHz\cdot 20\ \upmu H}\right) - \left(\dfrac{0.55\rm\ A}{2}\right)} \\
   \newline
   & \approx 25.13\rm\ m\Omega \\
 \rule{0pt}{50pt} \\
@@ -212,7 +212,7 @@ Current sense amplifier gain ($\rm A_{S(1)}$) and K factor ($\rm K_{(1)}$) are b
 $$
 \begin{align*}
 \rm R_{RAMP(1)} & = \frac{\rm L_{O(1)}}{\rm K_{(1)}\cdot C_{RAMP(1)}\cdot R_{S(1)}\cdot A_{S(1)}}\ [\Omega] \\
-  & = \frac{20\rm\ \textmu H}{1\cdot 1\rm\ nF\cdot 25\ m\Omega\cdot 10} \\
+  & = \frac{20\rm\ \upmu H}{1\cdot 1\rm\ nF\cdot 25\ m\Omega\cdot 10} \\
   \newline
   & = 80\rm\ k\Omega
 \end{align*}
@@ -235,8 +235,8 @@ The startup threshold (${\rm V_{STARTUP(1)}}$) was set to 17.4 V, with 1 V hyste
 
 $$
 \begin{align*}
-\rm R_{UV2(1)} & = \frac{\rm V_{HYS(1)}}{20\rm\ \textmu A}\ [\Omega] \\
-  & = \frac{1\rm\ V}{20\rm\ \textmu A} \\
+\rm R_{UV2(1)} & = \frac{\rm V_{HYS(1)}}{20\rm\ \upmu A}\ [\Omega] \\
+  & = \frac{1\rm\ V}{20\rm\ \upmu A} \\
   \newline
   & = 50\rm\ k\Omega \\
 \rule{0pt}{50pt} \\
@@ -263,8 +263,8 @@ The soft-start time ($\rm t_{SS}$) was selected as 10 ms to mitigate high inrush
 
 $$
 \begin{align*}
-\rm C_{SS(1)} & = \frac{\rm t_{SS} \cdot 10\ \textmu A}{0.8\rm\ V}\ [\rm F] \\
-  & = \frac{10\rm\ ms\cdot 10\ \textmu A}{0.8\rm\ V} \\
+\rm C_{SS(1)} & = \frac{\rm t_{SS} \cdot 10\ \upmu A}{0.8\rm\ V}\ [\rm F] \\
+  & = \frac{10\rm\ ms\cdot 10\ \upmu A}{0.8\rm\ V} \\
   \newline
   & = 125\rm\ nF
 \end{align*}
@@ -284,8 +284,8 @@ The restart delay ($\rm t_{RES}$) was set to 125 ms to allow sufficient cooling 
 
 $$
 \begin{align*}
-\rm C_{RES(1)} & = \frac{\rm t_{RES} \cdot 10\ \textmu A}{1.25\rm\ V}\ [\rm F] \\
-  & = \frac{125\rm\ ms\cdot 10\ \textmu A}{1.25\rm\ V} \\
+\rm C_{RES(1)} & = \frac{\rm t_{RES} \cdot 10\ \upmu A}{1.25\rm\ V}\ [\rm F] \\
+  & = \frac{125\rm\ ms\cdot 10\ \upmu A}{1.25\rm\ V} \\
   \newline
   & = 1\rm\ uF 
 \end{align*}
@@ -301,7 +301,7 @@ $$
 $$
 
 #### Output Voltage Divider ($\rm R_{FB2(1)}$ and $\rm R_{FB1(1)}$)
-The feedback divider resistors were configured for the maximum output voltage (${\rm\ V_{OUT(1)}}$) to enable output voltage adjustment using a DAC-based feedback adjustment.
+The feedback divider resistors were configured for the maximum output voltage (${\rm V_{OUT(1)}}$) to enable output voltage adjustment using a DAC-based feedback adjustment.
 
 $$
 \begin{align*}
@@ -318,8 +318,41 @@ $$
 \boxed{
 \begin{align*}
   &\text{Picked Value(s):} \\
-  &\diamond \rm R_{FB2(1)} =\ 22.1\rm\ k\Omega \\
-  &\diamond \rm R_{FB1(1)} =\ 1.3\rm\ k\Omega \\
+  &\diamond \rm R_{FB2(1)} =\ 18.7\rm\ k\Omega \\
+  &\diamond \rm R_{FB1(1)} =\ 1.1\rm\ k\Omega \\
+\end{align*}
+}
+$$
+
+#### Loop Compensation Network ($\rm C_{COMP(1)}$, $\rm R_{COMP(1)}$ and $\rm C_{HF(1)}$)
+The loop bandwidth ($\rm f_{CROSS(1)}$) was set to 1/20 of the switching frequency ($\rm f_{SW(1)}$) to prioritize loop stability over aggressive transient speed. This additionally prevents $\rm R_{COMP(1)}$ from reaching excessively high values, thus ensuring better noise immunity.
+
+$$
+\begin{align*}
+\rm f_{CROSS(1)} & = \frac{\rm f_{SW(1)}}{20} \\
+  \newline
+  & = 21.75\rm kHz \\
+\rule{0pt}{50pt} \\
+\rm R_{COMP(1)}  & = \rm 2\uppi\cdot R_{S(1)}\cdot A_{S(1)}\cdot C_{OUT(1)}\cdot R_{FB2(1)}\cdot f_{CROSS(1)}\ [\Omega] \\
+  & = \rm 2\uppi\cdot 25 m\Omega\cdot 10\cdot 220 \upmu F\cdot 18.7\ k\Omega\cdot 21.75\ kHz \\
+  \newline
+  & \approx 140.6\rm\ k\Omega \\
+\rule{0pt}{50pt} \\
+\rm C_{COMP(1)}  & = \frac{\rm R_{LOAD}\cdot \rm C_{OUT}}{\rm R_{COMP}}\ [\rm F] \\
+  & = \frac{\rm \left(\dfrac{14.4\rm\ V}{2.75\rm\ A}\right)\cdot 220\rm\ \upmu F}{\rm 140\rm\ k\Omega}\ [\rm F] \\
+  \newline
+  & \approx 8.23\rm\ nF \\
+\rule{0pt}{50pt} \\
+\rm C_{HF} & =\ \text{[TBD]}
+\end{align*}
+$$
+
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm R_{COMP(1)} =\ 140\rm\ k\Omega \\
+  &\diamond \rm C_{COMP(1)} =\ 8.2\rm\ nF \\
 \end{align*}
 }
 $$
