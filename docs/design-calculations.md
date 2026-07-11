@@ -124,7 +124,7 @@ For a conservative baseline, the nominal adapter switching frequency ($\rm f_{SW
 
 $$
 \begin{aligned}
-\rm f_{C} &= \rm \frac{1}{2 \uppi \sqrt{L_{IN} \cdot C_{IN(EQ)}}} \\
+\rm f_{C} &= \rm \frac{1}{2 \uppi \sqrt{L_{IN} \cdot C_{IN(EQ)}}}\ [\rm Hz] \\
   & = \frac{1}{2 \uppi \sqrt{(6.8 \cdot 10^{-6}) \cdot (120 \cdot 10^{-6})}} \\
   \newline
   & \approx \rm 5.57\ kHz\ \(\text{17x less than}\ f_{SW}\)
@@ -329,7 +329,7 @@ The loop bandwidth ($\rm f_{CROSS(1)}$) was set to 1/20 of the switching frequen
 
 $$
 \begin{align*}
-\rm f_{CROSS(1)} & = \frac{\rm f_{SW(1)}}{20} \\
+\rm f_{CROSS(1)} & = \frac{\rm f_{SW(1)}}{20}\ [\rm Hz] \\
   \newline
   & = 21.75\rm kHz \\
 \rule{0pt}{50pt} \\
@@ -339,7 +339,7 @@ $$
   & \approx 140.6\rm\ k\Omega \\
 \rule{0pt}{50pt} \\
 \rm C_{COMP(1)}  & = \frac{\rm R_{LOAD}\cdot \rm C_{OUT}}{\rm R_{COMP}}\ [\rm F] \\
-  & = \frac{\rm \left(\dfrac{14.4\rm\ V}{2.75\rm\ A}\right)\cdot 220\rm\ \upmu F}{\rm 140\rm\ k\Omega}\ [\rm F] \\
+  & = \frac{\rm \left(\dfrac{14.4\rm\ V}{2.75\rm\ A}\right)\cdot 220\rm\ \upmu F}{\rm 140\rm\ k\Omega} \\
   \newline
   & \approx 8.23\rm\ nF \\
 \rule{0pt}{50pt} \\
@@ -353,6 +353,36 @@ $$
   &\text{Picked Value(s):} \\
   &\diamond \rm R_{COMP(1)} =\ 140\rm\ k\Omega \\
   &\diamond \rm C_{COMP(1)} =\ 8.2\rm\ nF \\
+\end{align*}
+}
+$$
+
+#### Output Shunt Resistor ($\rm R_{S(OUT)}$)
+The output current was monitored by converting the load current ($\rm I_{OUT(1)}$) into an analog voltage signal via a dedicated shunt resistor and a current sense amplifier. The resulting analog signal was then digitized by the MCU's ADC. Since the LDO input current is approximately equal to its output current, the shunt resistor was placed before the feedback node at the LDO input to prevent the voltage drop across the shunt resistor from affecting the regulated output voltage.
+
+As low power consumption was not a primary concern for this project, the amplifier gain ($\rm A_{CS}$) was set to 50x to minimize the amplification of measurement errors. In addition, the reference voltage ($\rm V_{CS(REF)}$) was limited to 3.0 V, leaving 0.3 V headroom below the MCU supply voltage to reduce the impact of possible control errors.
+
+$$
+\begin{align*}
+\rm R_{CS} & = \rm \frac{\rm V_{CS(REF)} / A_{CS}}{\rm I_{OUT(MAX)}}\ [\Omega] \\
+  & = \frac{3.0\rm\ V / 50}{2.75\rm\ A} \\
+  \newline
+  & \approx 21.82\rm\ m\Omega \\
+\end{align*}
+$$
+
+To adjust reference voltage with the closest standard value for the shunt resistor:
+
+$$\rm V_{CS(REF)} = \rm 3\cdot\frac{22\cdot 10^{-3}}{21.82\cdot 10^{-3}} = 3.025\rm\ V$$
+
+$$
+\boxed{
+\begin{align*}
+  &\text{Picked Value(s):} \\
+  &\diamond \rm R_{CS} =\ 22\rm\ m\Omega \\
+  &\diamond \rm P_{RCS} =\ \rm [TBD > 0.17W] \\
+  &\diamond \rm A_{CS} =\ 50\rm x \\
+  &\diamond \rm V_{CS(REF)} =\ 3.025\rm\ V
 \end{align*}
 }
 $$
