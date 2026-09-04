@@ -15,10 +15,11 @@ While university courses mostly provided hypothetical ideal circuits, this proje
 
 ## Features
 ### Connections & Power
-- Powered by a standard laptop adapter (19–20 V, ≥ 65 W) (2.5mm DC Barrel Jack).
+- Powered by a standard laptop adapter (19–20 V, ≥ 65 W) (2.5 mm DC Barrel Jack).
 - Includes a USB-C port and SWD pins for PC connection and debugging.
 ### Protection & Safety
-- Reverse polarity protection via P-MOSFET, integrated with a mechanical switch on the gate for system ON/OFF control.
+- Reverse polarity protection via P-MOSFET.
+- Soft start via P-MOSFET, integrated with a mechanical switch on the gate for system ON/OFF control.
 - Temperature-controlled fan.
 - NPN-based active current sink at the output rail to maintain LDO stability under zero-load or light-load conditions.
 ### Output
@@ -49,6 +50,7 @@ flowchart LR
 
   subgraph AUX_RAILS [Auxiliary Rails]
     PI1 --> BUCK_5V[5V Buck]
+    PI1 --> BUCK_12V[12V Buck]
     BUCK_5V --> PI3[Pi-filter] --> LDO_3V3_D[3V3 Digital]
     BUCK_5V --> PI4[Pi-filter] --> LDO_3V3_A[3V3 Analog]
   end
@@ -63,7 +65,7 @@ flowchart LR
   LDO_3V3_D --> MCU
   LDO_3V3_A --> AMP
   BUCK_5V --> DISP
-  BUCK_5V --> FAN
+  BUCK_12V --> FAN
 
   MCU -.->|V-Set| LDO_ADJ
   MCU -.->|I-Limit| BUCK_ADJ
@@ -77,12 +79,13 @@ flowchart LR
 ```
 
 ### Stage 1: Power Input & Input Filtering
-* **Input Pre-Filtering:** For this design, it was assumed that standard laptop adapters operate around ~100 kHz switching frequency. To minimize this input noise, a CLC Pi-filter is placed immediately after the input.
-  
-* **Switching Frequency Planning:** To prevent beat frequency interference and cross-rail noise coupling, the system frequencies are explicitly separated:
+* **Input Pre-Filtering:** To prevent beat frequency interference and cross-rail noise coupling, a common CLC Pi-filter is placed immediately after the input.
+  
+* **Switching Frequency Planning:** To prevent similar interference across rails, operating frequencies are explicitly separated:
     - Laptop Adapter: ~100 kHz
     - Main Buck Regulator: 435 kHz
-    - Auxiliary 5V Buck Regulator: 1 MHz
+    - Auxiliary 12 V Buck Regulator: 570 kHz
+    - Auxiliary 5 V Buck Regulator: 1 MHz
 
 *Note: Other than common power input, both power rails ("Stage 2A" and "Stage 2B") are independent from each other.*
 
@@ -93,7 +96,7 @@ flowchart LR
   
 * **Current and Voltage Sensing:** The output current is measured using a shunt resistor paired with a current sense amplifier. The output voltage is sampled via a dedicated voltage divider connected to the LDO output rail. Both analog signals are then processed by the MCU's ADC and displayed on the OLED screen.
 
-### Stage 2B: Auxiliary Power Rails (5 V Buck & 3.3 V LDOs)
+### Stage 2B: Auxiliary Power Rails (12 V Buck & 5 V Buck & 3.3 V LDOs)
 * **Two-Level Regulation & Noise Isolation:** A 5 V Buck regulator serves as a pre-regulator for the 3.3 V LDOs, while directly powering the fan and the external display. To achieve clean signal processing, separate LDOs are dedicated to the analog and digital rails. This isolation prevents high-frequency digital switching noise from coupling into the sensitive analog rail. Additionally, both LDO lines include a ferrite bead Pi-filter at their inputs to block high-frequency EMI noise that LDOs struggle to suppress.
 
 * **Temperature-Controlled PWM Fan:** To optimize thermal management and minimize both acoustic and electrical noise, the cooling fan operates only when required. The MCU monitors the system temperature and drives an N-MOSFET via PWM to dynamically adjust the fan speed proportional to the device temperature.
