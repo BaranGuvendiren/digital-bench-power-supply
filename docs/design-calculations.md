@@ -55,19 +55,21 @@ To maintain mathematical clarity across multiple stages, variables are named usi
 | R<sub>FB1(1)</sub> | Output Voltage Divider Resistor 1 | — | TBD | — | kΩ | [See Calculations](#output-voltage-divider-rm-r_fb21-and-rm-r_fb11) |
 | R<sub>FB2(1)</sub> | Output Voltage Divider Resistor 2 | — | TBD | — | kΩ | [See Calculations](#output-voltage-divider-rm-r_fb21-and-rm-r_fb11) |
 
-### IC-2 TPS54332 Variables
+### IC-3 TPS54332 Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| V<sub>OUT(2)</sub> | Output Voltage | 4.9 | 5.0 | — | V | Supplied by V<sub>IN</sub> |
-| I<sub>OUT(2)</sub> | Output Current | — | 0.45 | 0.5 | A | Estimated Max Load |
-| η<sub>(2)</sub> | Output Efficiency | 74 | 76 | 78 | % | Estimated Efficiency Range |
-| f<sub>SW(2)</sub> | Switching Frequency | — | 1 | — | MHz | Fixed Switching Frequency |
+| V<sub>OUT(3)</sub> | Output Voltage | — | 12.0 | — | V | Supplied by V<sub>IN</sub> |
+| I<sub>OUT(3)</sub> | Output Current | — | TBD | — | A | Estimated Max Load |
+| η<sub>(3)</sub> | Output Efficiency | 70 | 72 | 74 | % | Estimated Efficiency Range |
+| f<sub>SW(3)</sub> | Switching Frequency | — | 1 | — | MHz | Fixed Switching Frequency |
 
-### IC-3 LP5907 Variables
+### IC-4 TPS54331 Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| V<sub>IN(3)</sub> | Input Voltage | 4.9 | 5.0 | — | V | Equal to V<sub>OUT(2)</sub> |
-| V<sub>OUT(3)</sub> | Output Voltage | — | 3.3 | — | V | Separate Rails for Analog and Digital |
+| V<sub>OUT(4)</sub> | Output Voltage | — | 5.0 | — | V | Supplied by V<sub>IN</sub> |
+| I<sub>OUT(4)</sub> | Output Current | — | TBD | — | A | Estimated Max Load |
+| η<sub>(4)</sub> | Output Efficiency | 74 | 76 | 78 | % | Estimated Efficiency Range |
+| f<sub>SW(4)</sub> | Switching Frequency | — | 570 | — | kHz | Fixed Switching Frequency |
 
 *Note: Some of the components are To Be Determined [TBD] based on availability and final layout space constraints.*
 
@@ -76,6 +78,8 @@ To maintain mathematical clarity across multiple stages, variables are named usi
 #### Middlebrook Criteria Confirmation
 To meet the Middlebrook criteria, input impedance of the converter must be at least 10x greater than output impedance of the source. To account for worst-case scenario, at lowest input impedance, minimum value of input voltage ($\rm V_{IN}$) was used.
 
+*Note: Auxiliary rails are excluded from the calculations as they draw minimal power relative to the main rail.*
+
 $$
 \begin{aligned}
 \rm P_{IN(1)} & = \rm \frac{I_{OUT(1)} \cdot V_{OUT(1)}}{\upeta_{(1)}}\ [W] \\
@@ -83,37 +87,25 @@ $$
   \newline
   & \approx \rm 50.77\ W
 \end{aligned}
-\qquad\qquad
-\begin{aligned}
-\rm P_{IN(2)} & = \rm \frac{ I_{OUT(2)} \cdot V_{OUT(2)}}{\upeta_{(2)}}\ [W] \\
-  & = \frac{0.5 \cdot 4.9}{0.74} \\
-  \newline
-  & \approx \rm 3.31\ W
-\end{aligned}
 $$
 
 $$
 \begin{aligned}
-\rm P_{IN} & = \rm P_{IN(1)} + P_{IN(2)}\ [W] \\
-  & = 50.77 + 3.31 \\
-  \newline
-  & = \rm 54.08\ W \\
-\rule{0pt}{10pt} \\
 \rm Z_{IN} & = \rm \frac{V_{IN}^2}{P_{IN}}\ [\Omega] \\
-  & = \frac{18.4^2}{54.08} \\
+  & = \frac{18.4^2}{50.77} \\
   \newline
-  & \approx \rm 6.26\ \Omega
+  & \approx \rm 6.67\ \Omega
 \end{aligned}
 $$
 
-For $\rm Z_{IN} \geq 10 \cdot Z_{OUT(FILTER)}$ to be true, output impedance of the source ($\rm Z_{OUT(FILTER)}$) must be less than $0.62\ \rm \Omega$. ($\rm L_{IN}$ was selected as standard value of 6.8 $\rm \upmu H$.)
+For $\rm Z_{IN} \geq 10 \cdot Z_{OUT(FILTER)}$ to be true, output impedance of the source ($\rm Z_{OUT(FILTER)}$) must be less than $0.66\ \rm \Omega$. ($\rm L_{IN}$ was selected as standard value of 6.8 $\rm \upmu H$.)
 
 $$
 \begin{aligned}
 \rm Z_{OUT(FILTER)} & = \rm \sqrt{\frac{L_{IN}}{C_{IN(EQ)}}}\ [\Omega] \\
   & = \sqrt{\frac{6.8 \cdot 10^{-6}}{120 \cdot 10^{-6}}} \\
   \newline
-  & \approx \rm 0.24\ \Omega\ \(\text{26x less than}\ Z_{IN}\)
+  & \approx \rm 0.24\ \Omega\ \(\text{27x less than}\ Z_{IN}\)
 \end{aligned}
 $$
 
@@ -380,7 +372,7 @@ $$
 \begin{align*}
   &\text{Picked Value(s):} \\
   &\diamond \rm R_{CS} =\ 22\rm\ m\Omega \\
-  &\diamond \rm P_{RCS} =\ \rm [TBD > 0.17W] \\
+  &\diamond \rm P_{RCS} =\ \rm [TBD > 0.17\ W] \\
   &\diamond \rm A_{CS} =\ 50\rm x \\
   &\diamond \rm V_{CS(REF)} =\ 3.025\rm\ V
 \end{align*}
