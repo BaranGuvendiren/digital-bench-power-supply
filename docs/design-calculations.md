@@ -11,7 +11,7 @@ To maintain mathematical clarity across multiple stages, variables are named usi
 | Notation Format | Description | Example |
 | :--- | :--- | :--- |
 | **No Parentheses** | Global board-level variable | $\rm V_{OUT}$ (Board output voltage) |
-| **With Parentheses** | Component specific to a certain IC | $\rm V_{OUT(1)}$ (Output voltage specific to IC1 - LM25117) |
+| **With Parentheses** | Component specific to a certain IC | $\rm V_{OUT(1)}$ (Output voltage specific to U1 - LM25117) |
 
 *Note: The number inside the parentheses indicates which integrated circuit (IC) the variable belongs to.*
 
@@ -19,32 +19,38 @@ To maintain mathematical clarity across multiple stages, variables are named usi
 | IC Number | Component Name | Description |
 | :---: | :--- | :--- |
 | **1** | LM25117 | Main Buck Pre-Regulator |
-| **2** | TPS54332 | Auxiliary Buck Pre-Regulator | 
-| **3** | LP5907 | Auxiliary LDO | 
+| **2** | MIC29302 | Main LDO |
+| **4** | TPS54331 | Auxiliary 5 V Buck Regulator | 
+| **6** | TPS54332 | Auxiliary 12 V Buck Regulator | 
 
 ## Variable Tables
 ### Board Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
 | V<sub>IN</sub> | Input Voltage | 18.4 | 19.0 | 20.4 | V | Standard 19 V/20 V Laptop DC Power Adapter |
-| V<sub>OUT</sub> | Adjustable Output Voltage | 1.25 | — | 14.0 | V | User/Load Dependent |
+| V<sub>OUT</sub> | Adjustable Output Voltage | 1.25 | — | 13.8 | V | User/Load Dependent |
 | f<sub>SW</sub> | Adapter Switching Frequency | 60 | 100 | 140 | kHz | Estimated Adapter Switching Frequency |
 | P<sub>IN</sub> | Total Input Power | — | — | 54.08 | W | Combined Worst-Case Input Power |
 | I<sub>IN</sub> | Input Current | — | — | 2.94 | A | Max Current Drawn from Adapter |
 | I<sub>OUT</sub> | Output Load Current | — | — | 2.75 | A | Hardware Current Limit |
 | C<sub>IN(EQ)</sub> | Equivalent Filter Capacitance | — | 120 | — | μF | Calculated Equivalent Input Capacitance |
 | L<sub>IN</sub> | Input Filter Inductance | — | 6.8 | — | μH | Selected Power Inductor |
+| R<sub>CS</sub> | Output Current Sense Resistor | — | 22 | — | mΩ | [See Calculations]( #output-shunt-resistor-rm-r_sout) |
+| V<sub>CS(REF)</sub> | Reference for ADC | — | 3.025 | — | V | [See Calculations]( #output-shunt-resistor-rm-r_sout) |
 
-### IC-1 LM25117 Variables
+### U1 - LM25117 Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
 | η<sub>(1)</sub> | Output Efficiency | 78 | 80 | 82 | % | Estimated Efficiency Range |
-| V<sub>OUT</sub> | Adjustable Output Voltage | 1.65 | — | 14.4 | V | User/Load Dependent |
+| V<sub>OUT(1)</sub> | Pre-regulator Output Voltage | 1.85 | — | 14.4 | V | V<sub>OUT</sub> + 0.6 V (LDO Headroom) |
 | I<sub>OUT(1)</sub> | Output Load Current | — | — | 2.75 | A | Hardware Current Limit Boundary |
 | f<sub>SW(1)</sub> | Switching Frequency | — | 435 | — | kHz | Desired Switching Frequency |
-| R<sub>T(1)</sub> | Timer Resistor | — | 82 | — | kΩ | [See Calculations](#timer-resistor-rm-r_t1) |
-| L<sub>O</sub> | Output Inductor | — | 20 | — | μH | [See Calculations](#output-inductor-rm-l_o1) |
-| R<sub>S(1)</sub> | Current Sense Resistor | — | 25 | — | mΩ | [See Calculations](#current-sense-resistor-rm-r_s1) |
+| R<sub>T(1)</sub> | Timer Resistor | — | 11 | — | kΩ | [See Calculations](#timer-resistor-rm-r_t1) |
+| L<sub>O(1)</sub> | Output Inductor | — | 20 | — | μH | [See Calculations](#output-inductor-rm-l_o1) |
+| C<sub>VCC(1)</sub> | VCC Input Capacitor | — | 1 | — | μF | Selected Standard Capacitor Value |
+| R<sub>VIN(1)</sub> | VIN Input Resistor | — | TBD | — | mΩ | Optional Standard Value |
+| C<sub>VIN(1)</sub> | VIN Input Capacitor | — | 0.47 | — | μF | Optional Standard Value |
+| R<sub>S(1)</sub> | Current Sense Resistor (for CM pin) | — | 25 | — | mΩ | [See Calculations](#current-sense-resistor-rm-r_s1) |
 | R<sub>RAMP(1)</sub> | Ramp Resistor | — | 82 | — | kΩ | [See Calculations](#ramp-resistor-and-capacitor-rm-r_ramp1-and-rm-c_ramp1) |
 | C<sub>RAMP(1)</sub> | Ramp Capacitor | — | 1 | — | nF | Selected Standard Capacitor Value |
 | R<sub>UV2(1)</sub> | UVLO Resistor 1 | — | 50 | — | kΩ | [See Calculations](#uvlo-divider-rm-r_uv11-and-rm-r_uv21) |
@@ -52,24 +58,31 @@ To maintain mathematical clarity across multiple stages, variables are named usi
 | C<sub>FT(1)</sub> | UVLO Filter Capacitor | — | 100 | — | pF | Selected Standard Capacitor Value |
 | C<sub>SS(1)</sub> | Soft-Start Capacitor | — | 120 | — | nF | [See Calculations](#soft-start-capacitor-rm-c_ss1) |
 | C<sub>RES(1)</sub> | Restart Capacitor | — | 1 | — | μF | [See Calculations](#restart-capacitor-rm-c_res1) |
-| R<sub>FB1(1)</sub> | Output Voltage Divider Resistor 1 | — | TBD | — | kΩ | [See Calculations](#output-voltage-divider-rm-r_fb21-and-rm-r_fb11) |
-| R<sub>FB2(1)</sub> | Output Voltage Divider Resistor 2 | — | TBD | — | kΩ | [See Calculations](#output-voltage-divider-rm-r_fb21-and-rm-r_fb11) |
+| R<sub>FB1(1)</sub> | Feedback Resistor 1 | — | 1.1 | — | kΩ | [See Calculations](#output-voltage-divider-rm-r_fb21-and-rm-r_fb11) |
+| R<sub>FB2(1)</sub> | Feedback Resistor 2 | — | 18.7 | — | kΩ | [See Calculations](#output-voltage-divider-rm-r_fb21-and-rm-r_fb11) |
+| R<sub>COMP(1)</sub> | Loop Compensation Network | — | 140 | — | kΩ | [See Calculations](#loop-compensation-network-rm-c_comp1-rm-r_comp1-and-rm-c_hf1-1) |
+| C<sub>COMP(1)</sub> | Loop Compensation Network | — | 8.2 | — | nF | [See Calculations](#loop-compensation-network-rm-c_comp1-rm-r_comp1-and-rm-c_hf1-1) |
+| C<sub>HF(1)</sub> | Loop Compensation Network | — | TBD | — | nF | [See Calculations](#loop-compensation-network-rm-c_comp1-rm-r_comp1-and-rm-c_hf1-1) |
 
-### IC-3 TPS54332 Variables
+### U2 - MIC29302 Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| V<sub>OUT(3)</sub> | Output Voltage | — | 12.0 | — | V | Supplied by V<sub>IN</sub> |
-| I<sub>OUT(3)</sub> | Output Current | — | TBD | — | A | Estimated Max Load |
-| η<sub>(3)</sub> | Output Efficiency | 70 | 72 | 74 | % | Estimated Efficiency Range |
-| f<sub>SW(3)</sub> | Switching Frequency | — | 1 | — | MHz | Fixed Switching Frequency |
 
-### IC-4 TPS54331 Variables
+### U4 - TPS54331 Variables
 | Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| V<sub>OUT(4)</sub> | Output Voltage | — | 5.0 | — | V | Supplied by V<sub>IN</sub> |
+| V<sub>OUT(4)</sub> | Output Voltage | — | 12.0 | — | V | Supplied by V<sub>IN</sub> |
 | I<sub>OUT(4)</sub> | Output Current | — | TBD | — | A | Estimated Max Load |
-| η<sub>(4)</sub> | Output Efficiency | 74 | 76 | 78 | % | Estimated Efficiency Range |
+| η<sub>(4)</sub> | Output Efficiency | 70 | 72 | 74 | % | Estimated Efficiency Range |
 | f<sub>SW(4)</sub> | Switching Frequency | — | 570 | — | kHz | Fixed Switching Frequency |
+
+### U6 - TPS54332 Variables
+| Variable | Description | MIN | TYP | MAX | UNIT | Source / Note |
+| :---: | :--- | :---: | :---: | :---: | :---: | :--- |
+| V<sub>OUT(6)</sub> | Output Voltage | — | 5.0 | — | V | Supplied by V<sub>IN</sub> |
+| I<sub>OUT(6)</sub> | Output Current | — | TBD | — | A | Estimated Max Load |
+| η<sub>(6)</sub> | Output Efficiency | 74 | 76 | 78 | % | Estimated Efficiency Range |
+| f<sub>SW(6)</sub> | Switching Frequency | — | 1 | — | MHz | Fixed Switching Frequency |
 
 *Note: Some of the components are To Be Determined [TBD] based on availability and final layout space constraints.*
 
@@ -126,7 +139,7 @@ $$
 #### Input MOSFET Heat Dissipation
 [TBD]
 
-### Stage 2A: Main Adjustable Power Rail (Buck Converter & LDO)
+### Stage 2A: Main Adjustable Power Rail
 #### Timer Resistor ($\rm R_{T(1)}$) 
 The switching frequency of the main buck regulator was set to 435 kHz via the $R_{T}$ pin resistor; this enables sufficient separation from the adapter's lower switching frequency ($\approx 100\rm\ kHz$) to minimize beat frequency noise, while preventing excessive switching losses at higher frequencies.
 
@@ -349,7 +362,7 @@ $$
 }
 $$
 
-#### Output Shunt Resistor ($\rm R_{S(OUT)}$)
+#### Output Shunt Resistor ($\rm R_{CS}$)
 The output current was monitored by converting the load current ($\rm I_{OUT(1)}$) into an analog voltage signal via a dedicated shunt resistor and a current sense amplifier. The resulting analog signal was then digitized by the MCU's ADC. Since the LDO input current is approximately equal to its output current, the shunt resistor was placed before the feedback node at the LDO input to prevent the voltage drop across the shunt resistor from affecting the regulated output voltage.
 
 As low power consumption was not a primary concern for this project, the amplifier gain ($\rm A_{CS}$) was set to 50x to minimize the amplification of measurement errors. In addition, the reference voltage ($\rm V_{CS(REF)}$) was limited to 3.0 V, leaving 0.3 V headroom below the MCU supply voltage to reduce the impact of possible control errors.
