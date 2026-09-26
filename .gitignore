@@ -3,6 +3,15 @@
 **/.DS_Store
 
 # 2. Hidden Folders & Drafts
-enclosure/
-docs/schematics/
 kicad/
+
+# 3. Environments
+.venv/
+.vscode/
+
+# 4. Latex Temp Files
+*.aux
+*.log
+*.synctex.gz
+*.out
+*.toc
